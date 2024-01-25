@@ -2,7 +2,7 @@
 #include <windows.h>
 #include "Engine/EngineLoader.hpp"
 
-const std::string ENGINE_PATH = "C:/Users/furwa/Documents/FurWaz/FullBowody/Engine/build/Debug/Engine.dll";
+const std::string ENGINE_PATH = "./Engine.dll";
 
 int main(int argc, char const *argv[])
 {
