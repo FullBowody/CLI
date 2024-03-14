@@ -2,7 +2,7 @@
 #include <filesystem>
 #include <signal.h>
 #include <thread>
-#include "Engine/EngineLoader.hpp"
+#include "EngineLoader.hpp"
 
 const std::string ENGINE_PATH = "Engine.dll";
 bool running = false;
