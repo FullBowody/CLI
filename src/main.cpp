@@ -57,4 +57,6 @@ int main(int argc, char const *argv[])
 
     std::cout << "Goodbye." << std::endl;
     loader.destroyEngine(engine);
+
+    return 0;
 }
