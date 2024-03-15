@@ -1,14 +1,11 @@
 cmake_minimum_required(VERSION 3.18)
 project(CLI)
 
-file(GLOB CLI_SRC
-    "src/*.hpp"
-    "src/*.cpp"
-)
 
-file (GLOB CLI_BINARIES
-    "bin/*.dll"
-)
+file(GLOB_RECURSE CLI_SRC "src/*.cpp")
+
+include_directories(include)
+include_directories(dependencies/Engine/include/public)
 
 list(GET CMAKE_CONFIGURATION_TYPES 0 CMAKE_BUILD_TYPE)
 # if cli binaries are not found, copy them from the build directory
