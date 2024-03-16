@@ -20,7 +20,7 @@ int main(int argc, char const *argv[])
     std::cout << "Loading engine at " << std::filesystem::current_path() << " ...";
     EngineLoader loader(ENGINE_PATH);
     Engine* engine = loader.createEngine();
-    if (engine == nullptr)
+    if (!engine)
     {
         std::cerr << std::endl << "Error : Failed to load engine!" << std::endl;
         return 1;
@@ -32,6 +32,10 @@ int main(int argc, char const *argv[])
     std::cout << "Starting engine ...";
     engine->start();
     std::cout << " Done!" << std::endl;
+
+    Camera* cam = engine->createCamera();
+    cam->attachListener(engine);
+    cam->readDevice(0);
 
     running = true;
     auto last = std::chrono::steady_clock::now();
@@ -47,7 +51,12 @@ int main(int argc, char const *argv[])
             continue;
         }
 
-        engine->update(dt_micro / 1000000.0f);
+        int res = engine->update(dt_micro / 1000000.0f);
+        if (res)
+        {
+            std::cerr << "Error : Engine update failed with code " << res << "!" << std::endl;
+            break;
+        }
         last = now;
     }
 
