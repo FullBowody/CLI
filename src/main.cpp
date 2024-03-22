@@ -4,7 +4,12 @@
 #include <thread>
 #include "EngineLoader.hpp"
 
-const std::string ENGINE_PATH = "Engine.dll";
+#ifdef _WIN32
+const std::string ENGINE_PATH = "./Engine.dll";
+#else
+const std::string ENGINE_PATH = "./libEngine.so";
+#endif
+
 bool running = false;
 int clock_micro = 1000000 / 60;
 
@@ -34,7 +39,7 @@ int main(int argc, char const *argv[])
     std::cout << " Done!" << std::endl;
 
     Camera* cam = engine->createCamera();
-    cam->attachListener(engine);
+    cam->attachListener((EventListener<CameraFrameEvent>*) engine);
     cam->readDevice(0);
 
     running = true;
