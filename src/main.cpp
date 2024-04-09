@@ -3,6 +3,7 @@
 #include <signal.h>
 #include <thread>
 #include "EngineLoader.hpp"
+#include "Cli.hpp"
 
 #ifdef _WIN32
 const std::string ENGINE_PATH = "./Engine.dll";
@@ -10,11 +11,11 @@ const std::string ENGINE_PATH = "./Engine.dll";
 const std::string ENGINE_PATH = "./libEngine.so";
 #endif
 
-bool running = false;
-int clock_micro = 1000000 / 60;
+Cli cli;
 
 void intHandler(int dummy) {
-    running = false;
+    cli.shouldRun = false;
+    std::cout << std::endl;
 }
 
 int main(int argc, char const *argv[])
@@ -22,7 +23,7 @@ int main(int argc, char const *argv[])
     if (argc > 1) // If engine folder specified, go to that folder
         std::filesystem::current_path(std::string(argv[1]));
 
-    std::cout << "Loading engine at " << std::filesystem::current_path() << " ...";
+    std::cout << "Loading engine from " << ENGINE_PATH << "..." << std::endl;
     EngineLoader loader(ENGINE_PATH);
     Engine* engine = loader.createEngine();
     if (!engine)
@@ -30,47 +31,32 @@ int main(int argc, char const *argv[])
         std::cerr << std::endl << "Error : Failed to load engine!" << std::endl;
         return 1;
     }
-    std::cout << " Done!" << std::endl;
 
     signal(SIGINT, intHandler);
 
-    std::cout << "Starting engine ...";
+    std::cout << "Starting engine ..." << std::endl;
     engine->start();
-    std::cout << " Done!" << std::endl;
 
-    Camera* cam = engine->createCamera();
-    cam->attachListener((EventListener<CameraFrameEvent>*) engine);
-    cam->readDevice(0);
+    std::cout << "Done." << std::endl;
 
-    running = true;
+    cli.init(engine);
+
     auto last = std::chrono::steady_clock::now();
-    while (running)
+    while (cli.shouldRun)
     {
         auto now = std::chrono::steady_clock::now();
-        auto dt_micro = std::chrono::duration_cast<std::chrono::microseconds>(now - last).count();
+        auto dt_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now - last).count();
 
-        if (dt_micro < clock_micro)
-        {
-            if (clock_micro > 1000000 / 65) // if not too fast, sleep a bit to save CPU
-                std::this_thread::sleep_for(std::chrono::microseconds(1));
-            continue;
-        }
+        cli.update();
 
-        int res = engine->update(dt_micro / 1000000.0f);
-        if (res)
-        {
-            std::cerr << "Error : Engine update failed with code " << res << "!" << std::endl;
-            break;
-        }
+        engine->update(dt_ms / 1000.0f); // TODO : should catch and handle result
         last = now;
     }
 
-    std::cout << "Stopping engine ...";
+    std::cout << "Stopping engine ..." << std::endl;
     engine->stop();
-    std::cout << " Done!" << std::endl;
-
-    std::cout << "Goodbye." << std::endl;
     loader.destroyEngine(engine);
 
+    std::cout << "Goodbye." << std::endl;
     return 0;
 }
