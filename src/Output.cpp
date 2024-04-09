@@ -1,5 +1,4 @@
-#pragma once
-#include <string>
+#include "Output.hpp"
 #include <iostream>
 
 namespace Output

@@ -3,6 +3,7 @@
 #include <signal.h>
 #include <thread>
 #include "EngineLoader.hpp"
+#include "Sections/SettingsSection.hpp"
 #include "Cli.hpp"
 
 #ifdef _WIN32
@@ -44,13 +45,25 @@ int main(int argc, char const *argv[])
     auto last = std::chrono::steady_clock::now();
     while (cli.shouldRun)
     {
+        cli.update();
+
         auto now = std::chrono::steady_clock::now();
         auto dt_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now - last).count();
 
-        cli.update();
+        int ups = SettingsSection::settings.updatesPerSeconds;
+        if (ups > 0 && dt_ms >= 1000 / ups)
+        {
+            int err = engine->update(dt_ms / 1000.0f);
+            if (err)
+            {
+                std::cerr << "\nError : Engine update failed with code " << err << std::endl;
+                break;
+            }
+            last = now;
+        }
 
-        engine->update(dt_ms / 1000.0f); // TODO : should catch and handle result
-        last = now;
+        // wait 1ms to avoid 100% CPU usage
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 
     std::cout << "Stopping engine ..." << std::endl;

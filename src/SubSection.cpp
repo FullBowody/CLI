@@ -21,7 +21,7 @@ SubSection::~SubSection()
 
 void SubSection::printHelp()
 {
-    std::cout << "Help for " << name << " section :" << std::endl;
+    std::cout << "Help for " << name << " :" << std::endl;
     for (auto section : sections)
     {
         if (section == nullptr)

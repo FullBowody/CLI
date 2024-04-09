@@ -2,6 +2,7 @@
 #include "Output.hpp"
 #include "Command.hpp"
 #include "Sections/CameraSection.hpp"
+#include "Sections/SettingsSection.hpp"
 
 Cli::Cli()
     : SubSection("FullBowody", "FullBowody command line interface")
@@ -18,6 +19,9 @@ void Cli::init(Engine* engine)
 {
     this->engine = engine;
 
+    addSection(new CameraSection(this->engine));
+    addSection(new SettingsSection(this->engine));
+
     addSection(CommandFactory::createCommand(
         "exit",
         "Exit the program",
@@ -27,9 +31,7 @@ void Cli::init(Engine* engine)
             return true;
         }
     ));
-
-    addSection(new CameraSection(this->engine));
-
+    
     Output::DrawLine();
 }
 

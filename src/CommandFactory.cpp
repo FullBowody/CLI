@@ -1,7 +1,5 @@
-#pragma once
-#include "Command.hpp"
-#include "Argument.hpp"
-#include "ArgumentDescriptor.hpp"
+#include "CommandFactory.hpp"
+#include "Output.hpp"
 
 namespace CommandFactory
 {
@@ -15,9 +13,15 @@ namespace CommandFactory
         std::string builtDesc = "";
         for (int i = 0; i < args.size(); i++)
         {
+            builtDesc += Output::FG_GRAY;
             builtDesc += " [";
-            builtDesc += args[i].getName() + ":" + ArgumentDescriptor::toString(args[i].getType());
+            builtDesc += Output::FG_RESET;
+            builtDesc += args[i].getName() + ":";
+            builtDesc += Output::FG_YELLOW;
+            builtDesc += ArgumentDescriptor::toString(args[i].getType());
+            builtDesc += Output::FG_GRAY;
             builtDesc += "]";
+            builtDesc += Output::FG_RESET;
         }
         builtDesc += " : ";
         builtDesc += description;

@@ -1,16 +1,4 @@
-#pragma once
-#include "SubSection.hpp"
-#include "CommandFactory.hpp"
-
-class CameraSection : public SubSection
-{
-private:
-    Engine* engine;
-    
-public:
-    CameraSection(Engine* engine);
-    ~CameraSection();
-};
+#include "Sections/CameraSection.hpp"
 
 CameraSection::CameraSection(Engine* engine)
     : SubSection("camera", "list, create, edit, delete cameras"), engine(engine)
