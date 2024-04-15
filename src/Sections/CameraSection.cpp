@@ -37,6 +37,21 @@ CameraSection::CameraSection(Engine* engine)
         }
     ));
     addSection(CommandFactory::createCommand(
+        "inspect",
+        "Print camera informations",
+        { ArgumentDescriptor("id", ArgumentType::INT) },
+        [this](std::vector<Argument> args) -> bool {
+            int id = args[0].asInt();
+            Camera* cam = this->engine->getCamera(id-1);
+            if (!cam) failError("Wrong camera index");
+            std::cout << "Camera " << id << " informations :" << std::endl;
+            std::cout << "  - Width : " << cam->getWidth() << std::endl;
+            std::cout << "  - Height : " << cam->getHeight() << std::endl;
+            std::cout << "  - Fps : " << cam->getFps() << std::endl;
+            return true;
+        }
+    ));
+    addSection(CommandFactory::createCommand(
         "readwebcam",
         "Read a given webcam stream",
         { ArgumentDescriptor("id", ArgumentType::INT), ArgumentDescriptor("index", ArgumentType::INT) },
