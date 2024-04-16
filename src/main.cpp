@@ -6,12 +6,6 @@
 #include "Sections/SettingsSection.hpp"
 #include "Cli.hpp"
 
-#ifdef _WIN32
-const std::string ENGINE_PATH = "./Engine.dll";
-#else
-const std::string ENGINE_PATH = "./libEngine.so";
-#endif
-
 Cli cli;
 
 void intHandler(int dummy) {
@@ -21,11 +15,14 @@ void intHandler(int dummy) {
 
 int main(int argc, char const *argv[])
 {
-    if (argc > 1) // If engine folder specified, go to that folder
-        std::filesystem::current_path(std::string(argv[1]));
+    if (argc < 2)
+    {
+        std::cerr << "Usage: " << argv[0] << " <engine_path>" << std::endl;
+        return 1;
+    }
 
-    std::cout << "Loading engine from " << ENGINE_PATH << "..." << std::endl;
-    EngineLoader loader(ENGINE_PATH);
+    std::cout << "Loading engine from " << argv[1] << " ..." << std::endl;
+    EngineLoader loader(argv[1]);
     Engine* engine = loader.createEngine();
     if (!engine)
     {
