@@ -5,7 +5,7 @@
 
 #define failError(msg) { std::cout << "Error : " << msg << std::endl; return false; return false; }
 
-typedef std::function<bool(const std::string&)> CommandCallback;
+using CommandCallback = std::function<bool(const std::string&)>;
 
 class Command : public Section
 {
