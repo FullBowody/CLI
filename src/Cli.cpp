@@ -1,6 +1,7 @@
 #include "Cli.hpp"
 #include "Output.hpp"
 #include "Command.hpp"
+#include "Sections/PluginSection.hpp"
 #include "Sections/CameraSection.hpp"
 #include "Sections/SettingsSection.hpp"
 
@@ -19,6 +20,7 @@ void Cli::init(Engine* engine)
 {
     this->engine = engine;
 
+    addSection(new PluginSection(this->engine));
     addSection(new CameraSection(this->engine));
     addSection(new SettingsSection(this->engine));
 
