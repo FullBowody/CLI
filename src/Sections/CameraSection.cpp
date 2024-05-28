@@ -19,9 +19,12 @@ CameraSection::CameraSection(Engine* engine)
     addSection(CommandFactory::createCommand(
         "create",
         "Create a camera",
-        { },
+        {
+            ArgumentDescriptor("plugin", ArgumentType::STRING)
+        },
         [this](std::vector<Argument> args) -> bool {
-            this->engine->createCamera();
+            std::string plugin = args[0].asString();
+            this->engine->createCamera(plugin);
             return true;
         }
     ));
@@ -33,47 +36,6 @@ CameraSection::CameraSection(Engine* engine)
             int id = args[0].asInt();
             if (!this->engine->destroyCamera(id-1))
                 failError("Wrong camera index");
-            return true;
-        }
-    ));
-    addSection(CommandFactory::createCommand(
-        "inspect",
-        "Print camera informations",
-        { ArgumentDescriptor("id", ArgumentType::INT) },
-        [this](std::vector<Argument> args) -> bool {
-            int id = args[0].asInt();
-            Camera* cam = this->engine->getCamera(id-1);
-            if (!cam) failError("Wrong camera index");
-            std::cout << "Camera " << id << " informations :" << std::endl;
-            std::cout << "  - Width : " << cam->getWidth() << std::endl;
-            std::cout << "  - Height : " << cam->getHeight() << std::endl;
-            std::cout << "  - Fps : " << cam->getFps() << std::endl;
-            return true;
-        }
-    ));
-    addSection(CommandFactory::createCommand(
-        "readwebcam",
-        "Read a given webcam stream",
-        { ArgumentDescriptor("id", ArgumentType::INT), ArgumentDescriptor("index", ArgumentType::INT) },
-        [this](std::vector<Argument> args) -> bool {
-            int id = args[0].asInt();
-            int index = args[1].asInt();
-            Camera* cam = this->engine->getCamera(id-1);
-            if (!cam) failError("Wrong camera index");
-            cam->readDevice(index);
-            return true;
-        }
-    ));
-    addSection(CommandFactory::createCommand(
-        "readstream",
-        "Read a given web stream",
-        { ArgumentDescriptor("id", ArgumentType::INT), ArgumentDescriptor("url", ArgumentType::STRING) },
-        [this](std::vector<Argument> args) -> bool {
-            int id = args[0].asInt();
-            std::string url = args[1].asString();
-            Camera* cam = this->engine->getCamera(id-1);
-            if (!cam) failError("Wrong camera index");
-            cam->readStream(url);
             return true;
         }
     ));
