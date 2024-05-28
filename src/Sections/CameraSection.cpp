@@ -39,6 +39,45 @@ CameraSection::CameraSection(Engine* engine)
             return true;
         }
     ));
+    addSection(CommandFactory::createCommand(
+        "read",
+        "Makes a camera read a index device",
+        { ArgumentDescriptor("id", ArgumentType::INT), ArgumentDescriptor("index", ArgumentType::INT)},
+        [this](std::vector<Argument> args) -> bool {
+            int id = args[0].asInt();
+            int index = args[1].asInt();
+            Camera* camera = this->engine->getCamera(id-1);
+            if (!camera) failError("Wrong camera index");
+            Param* p = camera->getParameter("index");
+            if (!p) failError("Camera has no index parameter");
+            p->setValue(index);
+            return true;
+        }
+    ));
+    addSection(CommandFactory::createCommand(
+        "start",
+        "Starts a camera tracking",
+        { ArgumentDescriptor("id", ArgumentType::INT) },
+        [this](std::vector<Argument> args) -> bool {
+            int id = args[0].asInt();
+            Camera* camera = this->engine->getCamera(id-1);
+            if (!camera) failError("Wrong camera index");
+            camera->startTracking();
+            return true;
+        }
+    ));
+    addSection(CommandFactory::createCommand(
+        "stop",
+        "Stops a camera tracking",
+        { ArgumentDescriptor("id", ArgumentType::INT) },
+        [this](std::vector<Argument> args) -> bool {
+            int id = args[0].asInt();
+            Camera* camera = this->engine->getCamera(id-1);
+            if (!camera) failError("Wrong camera index");
+            camera->stopTracking();
+            return true;
+        }
+    ));
 }
 
 CameraSection::~CameraSection()

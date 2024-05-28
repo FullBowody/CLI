@@ -8,9 +8,9 @@ PluginSection::PluginSection(Engine* engine)
         "list",
         "List all plugins",
         { },
-        [this, engine](std::vector<Argument> args) -> bool {
+        [this](std::vector<Argument> args) -> bool {
             std::cout << "Engine plugins :" << std::endl;
-            PluginProvider& provider = engine->getPluginProvider();
+            PluginProvider& provider = this->engine->getPluginProvider();
             auto plugins = provider.getPlugins();
             for (auto plugin : plugins)
                 std::cout << "  - " << plugin.getName() << std::endl;
