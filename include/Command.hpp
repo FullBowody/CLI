@@ -3,7 +3,7 @@
 #include <iostream>
 #include "Section.hpp"
 
-#define failError(msg) { std::cout << "Error : " << msg << std::endl; return false; return false; }
+#define failError(msg) { std::cout << "Error : " << msg << std::endl; return false; }
 
 using CommandCallback = std::function<bool(const std::string&)>;
 

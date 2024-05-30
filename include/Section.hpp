@@ -20,8 +20,8 @@ protected:
     CommandParts parseCommand(const std::string& command);
 
 public:
-    virtual bool call(const std::string& command) = NULL;
-    virtual std::string complete(const std::string& command) = NULL;
+    virtual bool call(const std::string& command) = 0;
+    virtual std::string complete(const std::string& command) = 0;
 
     const std::string getName();
     const std::string getHelp();

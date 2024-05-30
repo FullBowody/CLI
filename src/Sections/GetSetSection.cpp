@@ -2,14 +2,13 @@
 #include "CommandFactory.hpp"
 
 GetSetSection::GetSetSection(
-    Engine* engine,
     std::string name,
     std::string description,
     ArgumentType type,
     std::function<std::string()> getter,
     std::function<bool(Argument)> setter
 )
-    : SubSection(name, std::string("Get or set ") + description), engine(engine)
+    : SubSection(name, std::string("Get or set ") + description)
 {
     addSection(CommandFactory::createCommand(
         "get",

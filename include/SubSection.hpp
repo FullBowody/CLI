@@ -16,6 +16,6 @@ public:
 
     void addSection(Section* section);
 
-    bool call(const std::string& command);
-    std::string complete(const std::string& command);
+    bool call(const std::string& command) override;
+    std::string complete(const std::string& command) override;
 };

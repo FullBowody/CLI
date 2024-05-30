@@ -1,4 +1,5 @@
 #include "Sections/CameraSection.hpp"
+#include "Sections/ParamSection.hpp"
 
 CameraSection::CameraSection(Engine* engine)
     : SubSection("camera", "list, create, edit, delete cameras"), engine(engine)
@@ -40,22 +41,7 @@ CameraSection::CameraSection(Engine* engine)
         }
     ));
     addSection(CommandFactory::createCommand(
-        "read",
-        "Makes a camera read a index device",
-        { ArgumentDescriptor("id", ArgumentType::INT), ArgumentDescriptor("index", ArgumentType::INT)},
-        [this](std::vector<Argument> args) -> bool {
-            int id = args[0].asInt();
-            int index = args[1].asInt();
-            Camera* camera = this->engine->getCamera(id-1);
-            if (!camera) failError("Wrong camera index");
-            Param* p = camera->getParameter("index");
-            if (!p) failError("Camera has no index parameter");
-            p->setValue(index);
-            return true;
-        }
-    ));
-    addSection(CommandFactory::createCommand(
-        "start",
+        "startTracking",
         "Starts a camera tracking",
         { ArgumentDescriptor("id", ArgumentType::INT) },
         [this](std::vector<Argument> args) -> bool {
@@ -67,7 +53,7 @@ CameraSection::CameraSection(Engine* engine)
         }
     ));
     addSection(CommandFactory::createCommand(
-        "stop",
+        "stopTracking",
         "Stops a camera tracking",
         { ArgumentDescriptor("id", ArgumentType::INT) },
         [this](std::vector<Argument> args) -> bool {
@@ -76,6 +62,14 @@ CameraSection::CameraSection(Engine* engine)
             if (!camera) failError("Wrong camera index");
             camera->stopTracking();
             return true;
+        }
+    ));
+    addSection(new ParamSection(
+        this->engine,
+        "params",
+        "edit camera parameters",
+        [this](int id) -> ParamManager* {
+            return this->engine->getCamera(id-1);
         }
     ));
 }

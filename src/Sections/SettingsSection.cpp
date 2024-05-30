@@ -8,7 +8,6 @@ SettingsSection::SettingsSection(Engine* engine)
     : SubSection("settings", "edit, load, or save settings"), engine(engine)
 {
     addSection(new GetSetSection(
-        engine,
         "ups",
         "engine updates per second",
         ArgumentType::INT,
