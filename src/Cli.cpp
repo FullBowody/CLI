@@ -118,3 +118,17 @@ void Cli::handleKeyPress(Input::KeyInfos key)
         break;
     }
 }
+
+void Cli::sigKill()
+{
+    if (command.empty())
+    {
+        this->shouldRun = false;
+        std::cout << std::endl;
+    }
+    else
+    {
+        command = "";
+        updateView();
+    }
+}

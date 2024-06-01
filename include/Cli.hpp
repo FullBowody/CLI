@@ -24,4 +24,5 @@ public:
 
     void init(Engine* engine);
     void update();
+    void sigKill();
 };

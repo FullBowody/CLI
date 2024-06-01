@@ -8,9 +8,11 @@
 
 Cli cli;
 
+void intHandler(int dummy);
+
 void intHandler(int dummy) {
-    cli.shouldRun = false;
-    std::cout << std::endl;
+    cli.sigKill();
+    signal(SIGINT, intHandler);
 }
 
 int main(int argc, char const *argv[])
