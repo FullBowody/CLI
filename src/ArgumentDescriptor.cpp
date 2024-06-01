@@ -17,7 +17,12 @@ ArgumentDescriptor::ArgumentDescriptor()
 }
 
 ArgumentDescriptor::ArgumentDescriptor(std::string name, ArgumentType type)
-    : name(name), type(type)
+    : name(name), type(type), completion([](std::string) -> std::string { return ""; })
+{
+}
+
+ArgumentDescriptor::ArgumentDescriptor(std::string name, ArgumentType type, CompletionCallback completion)
+    : name(name), type(type), completion(completion)
 {
 }
 
@@ -42,4 +47,9 @@ bool ArgumentDescriptor::validate(const std::string& arg) const
         return true;
     default: return false;
     }
+}
+
+std::string ArgumentDescriptor::complete(const std::string& arg) const
+{
+    return completion(arg);
 }

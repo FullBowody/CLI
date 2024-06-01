@@ -1,7 +1,13 @@
 #include "Command.hpp"
 
 Command::Command(std::string name, std::string help, CommandCallback callback)
-    : Section(name, help), callback(callback)
+    : Section(name, help), callback(callback), completion([](std::string) -> std::string { return ""; })
+{
+
+}
+
+Command::Command(std::string name, std::string help, CommandCallback callback, CompletionCallback completion)
+    : Section(name, help), callback(callback), completion(completion)
 {
 
 }
@@ -18,5 +24,5 @@ bool Command::call(const std::string& args)
 
 std::string Command::complete(const std::string& command)
 {
-    return "";
+    return completion(command);
 }

@@ -21,7 +21,20 @@ CameraSection::CameraSection(Engine* engine)
         "create",
         "Create a camera",
         {
-            ArgumentDescriptor("plugin", ArgumentType::STRING)
+            ArgumentDescriptor(
+                "plugin", ArgumentType::STRING,
+                [this](std::string cmd) -> std::string {
+                    PluginProvider& provider = this->engine->getPluginProvider();
+                    std::vector<PluginDescriptor> plugins = provider.getPlugins(PluginType::CAMERA);
+                    for (PluginDescriptor plugin : plugins)
+                    {
+                        std::string name = plugin.getName();
+                        if (name._Starts_with(cmd))
+                            return name.substr(cmd.size());
+                    }
+                    return "";
+                }
+            )
         },
         [this](std::vector<Argument> args) -> bool {
             std::string plugin = args[0].asString();

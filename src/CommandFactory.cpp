@@ -76,6 +76,25 @@ namespace CommandFactory
                 if (!valid) return false;
 
                 return callback(arguments);
+            },
+            [args](const std::string& input) -> std::string {
+                int nbParts = 0;
+                std::string lastPart;
+                for (char c : input)
+                {
+                    if (c == ' ')
+                    {
+                        nbParts++;
+                        lastPart.clear();
+                    }
+                    else lastPart += c;
+                }
+                if (lastPart.empty())
+                    return "";
+                if (nbParts >= args.size())
+                    return "";
+                
+                return args[nbParts].complete(lastPart);
             }
         );
     }
