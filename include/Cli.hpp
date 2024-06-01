@@ -22,6 +22,7 @@ public:
     Cli();
     ~Cli();
 
+    void clear();
     void init(Engine* engine);
     void update();
     void sigKill();

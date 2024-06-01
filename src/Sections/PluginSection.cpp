@@ -2,7 +2,7 @@
 #include "plugins/PluginProvider.hpp"
 
 PluginSection::PluginSection(Engine* engine)
-    : SubSection("plugin", "list and manage plugins"), engine(engine)
+    : SubSection("plugin", "List and manage plugins"), engine(engine)
 {
     addSection(CommandFactory::createCommand(
         "list",

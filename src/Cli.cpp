@@ -8,7 +8,7 @@
 Cli::Cli()
     : SubSection("FullBowody", "FullBowody command line interface")
 {
-    
+    this->clear();
 }
 
 Cli::~Cli()
@@ -25,6 +25,17 @@ void Cli::init(Engine* engine)
     addSection(new SettingsSection(this->engine));
 
     addSection(CommandFactory::createCommand(
+        "clear",
+        "Clear the console",
+        { },
+        [this](std::vector<Argument> args) -> bool {
+            this->clear();
+            this->updateView();
+            return true;
+        }
+    ));
+
+    addSection(CommandFactory::createCommand(
         "exit",
         "Exit the program",
         { },
@@ -35,6 +46,11 @@ void Cli::init(Engine* engine)
     ));
     
     Output::DrawLine();
+}
+
+void Cli::clear()
+{
+    std::cout << "\033[2J\033[1;1H";
 }
 
 void Cli::update()

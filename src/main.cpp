@@ -5,6 +5,7 @@
 #include "EngineLoader.hpp"
 #include "Sections/SettingsSection.hpp"
 #include "Cli.hpp"
+#include "constants.hpp"
 
 Cli cli;
 
@@ -23,21 +24,27 @@ int main(int argc, char const *argv[])
         return 1;
     }
 
-    std::cout << "Loading engine from " << argv[1] << " ..." << std::endl;
+    std::cout << FB_HEADER << std::endl;
+    std::cout << FB_HEADER_START << std::endl;
+
+    std::cout << FB_HEADER_START << "Loading engine from " << argv[1] << " ..." << std::endl;
     EngineLoader loader(argv[1]);
     Engine* engine = loader.createEngine();
     if (!engine)
     {
-        std::cerr << std::endl << "Error : Failed to load engine!" << std::endl;
+        std::cout << FB_HEADER_START << std::endl << "Error : Failed to load engine!" << std::endl;
         return 1;
     }
 
     signal(SIGINT, intHandler);
 
-    std::cout << "Starting engine ..." << std::endl;
+    std::cout << FB_HEADER_START << "Starting engine ..." << std::endl;
     engine->start();
 
-    std::cout << "Done." << std::endl;
+    std::cout << FB_HEADER_START << "Done." << std::endl;
+    std::cout << FB_HEADER_START << "Type 'help' for a list of available commands." << std::endl;
+    std::cout << FB_HEADER_START << std::endl;
+    std::cout << FB_FOOTER << std::endl;
 
     cli.init(engine);
 

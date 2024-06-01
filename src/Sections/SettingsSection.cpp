@@ -5,11 +5,11 @@
 Settings SettingsSection::settings;
 
 SettingsSection::SettingsSection(Engine* engine)
-    : SubSection("settings", "edit, load, or save settings"), engine(engine)
+    : SubSection("settings", "Edit, load, or save settings"), engine(engine)
 {
     addSection(new GetSetSection(
         "ups",
-        "engine updates per second",
+        "Engine updates per second",
         ArgumentType::INT,
         []() -> std::string {
             return std::to_string(settings.updatesPerSeconds);

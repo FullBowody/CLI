@@ -2,7 +2,7 @@
 #include "Sections/ParamSection.hpp"
 
 CameraSection::CameraSection(Engine* engine)
-    : SubSection("camera", "list, create, edit, delete cameras"), engine(engine)
+    : SubSection("camera", "List, create, edit, delete cameras"), engine(engine)
 {
     addSection(CommandFactory::createCommand(
         "list",
