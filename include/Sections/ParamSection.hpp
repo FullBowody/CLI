@@ -11,6 +11,8 @@ private:
     std::function<ParamManager*(int)> paramManagerGetter;
     std::vector<ArgumentDescriptor> args;
 
+    void printHelp(const std::vector<Param*>& params);
+
 public:
     ParamSection(Engine* engine, std::string name, std::string description, std::function<ParamManager*(int)> getter);
     ~ParamSection();

@@ -14,33 +14,46 @@ ArgumentType paramType2argType(ParamType type)
     }
 }
 
+void setParamValue(Param* param, Argument value)
+{
+    switch (param->getType())
+    {
+        case ParamType::BOOL:
+            param->setValue(value.asBool());
+            break;
+        case ParamType::INT:
+            param->setValue(value.asInt());
+            break;
+        case ParamType::FLOAT:
+            param->setValue(value.asFloat());
+            break;
+        case ParamType::STRING:
+            param->setValue(value.asString());
+            break;
+    }
+}
+
 ParamSection::ParamSection(Engine* engine, std::string name, std::string description, std::function<ParamManager*(int)> getter)
     : Section(name, ""), engine(engine), paramManagerGetter(getter)
 {
     args.push_back(ArgumentDescriptor("id", ArgumentType::INT));
     this->help = CommandFactory::buildArgedDesc(description, this->args);
-    // auto params = paramManager->getParameters();
-    // for (auto& param : params)
-    // {
-    //     addSection(new GetSetSection(
-    //         this->engine,
-    //         param->getName(),
-    //         param->getName(),
-    //         paramType2argType(param->getType()),
-    //         [param]() -> std::string {
-    //             return param->asString();
-    //         },
-    //         [param](Argument arg) -> bool {
-    //             param->setValue(arg.asString());
-    //             return true;
-    //         }
-    //     ));
-    // }
 }
 
 ParamSection::~ParamSection()
 {
     
+}
+
+void ParamSection::printHelp(const std::vector<Param*>& params)
+{
+    std::cout << "Available parameters:" << std::endl;
+    for (Param* param : params)
+    {
+        std::cout << "  - " << param->getName() << " (" <<
+        ArgumentDescriptor::toString(paramType2argType(param->getType())) <<
+        ")" << std::endl;
+    }
 }
 
 bool ParamSection::call(const std::string& command)
@@ -67,52 +80,92 @@ bool ParamSection::call(const std::string& command)
 
     if (paramCommand.name == "help")
     {
-        std::cout << "Available parameters:" << std::endl;
-        for (Param* param : params)
-        {
-            // TODO : Display type too
-            std::cout << "  - " << param->getName() << std::endl;
-        }
+        printHelp(params);
         return true;
     }
+
+    if (paramCommand.name != "get" && paramCommand.name != "set")
+        failError("Invalid command name");
+
+    if (paramCommand.args.empty())
+        failError("Missing parameter name");
+
+    CommandParts paramCommandArgs = parseCommand(paramCommand.args);
     
-    Param* param;
-    for (Param* p : params)
-    {
-        if (p->getName() == paramCommand.name)
-        {
-            param = p;
-            break;
-        }
-    }
+    Param* param = paramManager->getParameter(paramCommandArgs.name);
     if (param == nullptr)
-    {
         failError("Invalid parameter name");
+
+    if (paramCommand.name == "get")
+    {
+        std::cout << param->asString() << std::endl;
+        return true;
+    }
+    if (paramCommand.name == "set")
+    {
+        if (paramCommandArgs.args.empty())
+            failError("Missing value");
+
+        ArgumentDescriptor arg("", paramType2argType(param->getType()));
+        bool valid = arg.validate(paramCommandArgs.args);
+        if (!valid) failError("Invalid value");
+
+        setParamValue(param, Argument(paramCommandArgs.args));
+        return true;
     }
 
-    Section* s = new GetSetSection(
-        param->getName(),
-        param->getName(),
-        paramType2argType(param->getType()),
-        [param]() -> std::string {
-            return param->asString();
-        },
-        [param](Argument arg) -> bool {
-            param->setValue(arg.asInt());
-            return true;
-        }
-    );
-
-    // TODO : change from getsetsection to own section
-    // to write camera params [id] set/get property value
-    // instead of camera params [id] property set/get value
-
-    // TODO : Fix autocompletion
-
-    return s->call(paramCommand.args);
+    return false;
 }
 
 std::string ParamSection::complete(const std::string& command)
 {
+    if (command.empty())
+        return "";
+
+    int nbParts = 0;
+    std::string lastPart;
+    for (char c : command)
+    {
+        if (c == ' ')
+        {
+            nbParts++;
+            lastPart.clear();
+        }
+        else lastPart += c;
+    }
+
+    if (lastPart.empty())
+        return "";
+
+    switch (nbParts)
+    {
+        case 1: // get/set
+            if (std::string("get")._Starts_with(lastPart))
+                return std::string("get").substr(lastPart.size());
+            if (std::string("set")._Starts_with(lastPart))
+                return std::string("set").substr(lastPart.size());
+            return "";
+        case 2: // param name
+        {
+            std::string index = parseCommand(command).name;
+            if (index.empty())
+                return "";
+            int i = -1;
+            try { i = std::stoi(index); }
+            catch(const std::exception& e) { return ""; }
+        
+            ParamManager* paramManager = paramManagerGetter(i);
+            if (paramManager == nullptr)
+                return "";
+
+            const std::vector<Param*>& params = paramManager->getParameters();
+            for (Param* param : params)
+            {
+                if (param->getName()._Starts_with(lastPart))
+                    return param->getName().substr(lastPart.size());
+            }
+        }
+    }
+
     return "";
 }
