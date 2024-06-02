@@ -26,6 +26,10 @@ CameraSection::CameraSection(Engine* engine)
                 [this](std::string cmd) -> std::string {
                     PluginProvider& provider = this->engine->getPluginProvider();
                     std::vector<PluginDescriptor> plugins = provider.getPlugins(PluginType::CAMERA);
+
+                    if (std::string("help")._Starts_with(cmd))
+                        return std::string("help").substr(cmd.size());
+
                     for (PluginDescriptor plugin : plugins)
                     {
                         std::string name = plugin.getName();
@@ -38,6 +42,17 @@ CameraSection::CameraSection(Engine* engine)
         },
         [this](std::vector<Argument> args) -> bool {
             std::string plugin = args[0].asString();
+
+            if (plugin == "help")
+            {
+                PluginProvider& provider = this->engine->getPluginProvider();
+                std::vector<PluginDescriptor> plugins = provider.getPlugins(PluginType::CAMERA);
+                std::cout << "Available plugins:" << std::endl;
+                for (PluginDescriptor plugin : plugins)
+                    std::cout << "  - " << plugin.getName() << std::endl;
+                return true;
+            }
+
             this->engine->createCamera(plugin);
             return true;
         }
