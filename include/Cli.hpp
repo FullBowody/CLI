@@ -3,7 +3,7 @@
 #include "Input.hpp"
 #include "Engine.hpp"
 
-#define HISTORY_SIZE 10
+#define HISTORY_SIZE 20
 
 class Cli: public SubSection
 {
