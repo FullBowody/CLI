@@ -47,7 +47,7 @@ ParamSection::~ParamSection()
 
 void ParamSection::printHelp(const std::vector<Param*>& params)
 {
-    std::cout << "Available parameters:" << std::endl;
+    std::cout << "Available parameters :" << std::endl;
     for (Param* param : params)
     {
         std::cout << "  - " << param->getName() << " (" <<

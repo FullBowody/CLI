@@ -5,7 +5,7 @@
 Settings SettingsSection::settings;
 
 SettingsSection::SettingsSection(Engine* engine)
-    : SubSection("settings", "Edit, load, or save settings"), engine(engine)
+    : SubSection("settings", "Edit, load, save settings"), engine(engine)
 {
     addSection(new GetSetSection(
         "ups",

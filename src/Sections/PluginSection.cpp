@@ -1,19 +1,18 @@
 #include "Sections/PluginSection.hpp"
 #include "plugins/PluginProvider.hpp"
+#include "utils.hpp"
 
 PluginSection::PluginSection(Engine* engine)
-    : SubSection("plugin", "List and manage plugins"), engine(engine)
+    : SubSection("plugin", "List, manage plugins"), engine(engine)
 {
     addSection(CommandFactory::createCommand(
         "list",
         "List all plugins",
         { },
         [this](std::vector<Argument> args) -> bool {
-            std::cout << "Engine plugins :" << std::endl;
             PluginProvider& provider = this->engine->getPluginProvider();
-            auto plugins = provider.getPlugins();
-            for (auto plugin : plugins)
-                std::cout << "  - " << plugin.getName() << std::endl;
+            std::vector<PluginDescriptor> plugins = provider.getPlugins();
+            listVector<PluginDescriptor>("Engine plugins", plugins);
             return true;
         }
     ));

@@ -1,5 +1,6 @@
 #include "Sections/CameraSection.hpp"
 #include "Sections/ParamSection.hpp"
+#include "utils.hpp"
 
 CameraSection::CameraSection(Engine* engine)
     : SubSection("camera", "List, create, edit, delete cameras"), engine(engine)
@@ -9,11 +10,8 @@ CameraSection::CameraSection(Engine* engine)
         "List all cameras",
         { },
         [this](std::vector<Argument> args) -> bool {
-            std::cout << "Engine cameras :" << std::endl;
             std::vector<Camera*> cameras = this->engine->getCameras();
-            if (cameras.empty()) std::cout << "  - No camera" << std::endl;
-            for (int i = 0; i < cameras.size(); i++)
-                std::cout << "  - (" << (i+1) << ") : Camera" << std::endl;
+            listVector<Camera>("Engine cameras", cameras);
             return true;
         }
     ));
@@ -47,9 +45,7 @@ CameraSection::CameraSection(Engine* engine)
             {
                 PluginProvider& provider = this->engine->getPluginProvider();
                 std::vector<PluginDescriptor> plugins = provider.getPlugins(PluginType::CAMERA);
-                std::cout << "Available plugins:" << std::endl;
-                for (PluginDescriptor plugin : plugins)
-                    std::cout << "  - " << plugin.getName() << std::endl;
+                listVector<PluginDescriptor>("Available plugins", plugins);
                 return true;
             }
 

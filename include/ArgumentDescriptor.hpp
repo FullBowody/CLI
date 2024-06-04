@@ -7,7 +7,8 @@ enum class ArgumentType
     INT,
     FLOAT,
     BOOL,
-    STRING
+    STRING,
+    VEC3
 };
 
 class ArgumentDescriptor

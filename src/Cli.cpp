@@ -3,6 +3,7 @@
 #include "Command.hpp"
 #include "Sections/PluginSection.hpp"
 #include "Sections/CameraSection.hpp"
+#include "Sections/SceneSection.hpp"
 #include "Sections/SettingsSection.hpp"
 
 Cli::Cli()
@@ -22,6 +23,7 @@ void Cli::init(Engine* engine)
 
     addSection(new PluginSection(this->engine));
     addSection(new CameraSection(this->engine));
+    addSection(new SceneSection(this->engine));
     addSection(new SettingsSection(this->engine));
 
     addSection(CommandFactory::createCommand(

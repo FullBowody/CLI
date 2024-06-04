@@ -8,6 +8,7 @@ std::string ArgumentDescriptor::toString(ArgumentType type)
     case ArgumentType::FLOAT: return "float";
     case ArgumentType::BOOL: return "bool";
     case ArgumentType::STRING: return "string";
+    case ArgumentType::VEC3: return "vec3";
     default: return "unknown";
     }
 }
@@ -45,6 +46,22 @@ bool ArgumentDescriptor::validate(const std::string& arg) const
                arg == "false" || arg == "False" || arg == "FALSE";
     case ArgumentType::STRING:
         return true;
+    case ArgumentType::VEC3:
+    {
+        int pos = 0, oldPos = 0, count = 0;
+        while (pos < arg.size())
+        {
+            if (arg[++pos] == ',' || pos == arg.size())
+            {
+                std::string sub = arg.substr(oldPos, pos - oldPos);
+                try { float f = std::stof(sub); }
+                catch (const std::exception& e) { return false; }
+                oldPos = pos + 1;
+                count++;
+            }
+        }
+        return count == 3;
+    }
     default: return false;
     }
 }

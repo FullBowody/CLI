@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include "Struct/Vec3.hpp"
 
 class Argument
 {
@@ -14,4 +15,5 @@ public:
     bool asBool();
     float asFloat();
     std::string asString();
+    Vec3f asVec3f();
 };
