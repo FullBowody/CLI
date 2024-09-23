@@ -1,6 +1,6 @@
 #include "Sections/PluginSection.hpp"
-#include "plugins/PluginProvider.hpp"
-#include "utils.hpp"
+#include "Plugins/PluginProvider.hpp"
+#include "list.hpp"
 
 PluginSection::PluginSection(Engine* engine)
     : SubSection("plugin", "List, manage plugins"), engine(engine)

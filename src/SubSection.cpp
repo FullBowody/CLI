@@ -69,7 +69,7 @@ std::string SubSection::complete(const std::string& command)
         if (section == nullptr)
             continue;
 
-        if (section->getName()._Starts_with(cmd.name))
+        if (section->getName().rfind(cmd.name, 0) == 0)
         {
             if (section->getName() == cmd.name)
                 return section->complete(cmd.args);
@@ -78,7 +78,7 @@ std::string SubSection::complete(const std::string& command)
     }
 
     std::string help("help");
-    if (help._Starts_with(cmd.name))
+    if (help.rfind(cmd.name, 0) == 0)
         return help.substr(cmd.name.size());
 
     return "";

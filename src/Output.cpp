@@ -38,6 +38,7 @@ namespace Output
         std::cout << "\r";
         for (int i = 0; i <= _lastCommand.size() + _lastComplete.size() + Header.size(); i++)
             std::cout << " ";
+        std::cout << std::flush;
     }
 
     void DrawLine()
@@ -46,6 +47,7 @@ namespace Output
             _lastCommand << FG_GRAY <<
             _lastComplete << RESET <<
             "\r" << Header << _lastCommand;
+        std::cout << std::flush;
     }
 
     void ShowCommand(const std::string& command)

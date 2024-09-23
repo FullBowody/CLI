@@ -140,9 +140,9 @@ std::string ParamSection::complete(const std::string& command)
     switch (nbParts)
     {
         case 1: // get/set
-            if (std::string("get")._Starts_with(lastPart))
+            if (std::string("get").rfind(lastPart, 0) == 0)
                 return std::string("get").substr(lastPart.size());
-            if (std::string("set")._Starts_with(lastPart))
+            if (std::string("set").rfind(lastPart, 0) == 0)
                 return std::string("set").substr(lastPart.size());
             return "";
         case 2: // param name
@@ -161,7 +161,7 @@ std::string ParamSection::complete(const std::string& command)
             const std::vector<Param*>& params = paramManager->getParameters();
             for (Param* param : params)
             {
-                if (param->getName()._Starts_with(lastPart))
+                if (param->getName().rfind(lastPart, 0) == 0)
                     return param->getName().substr(lastPart.size());
             }
         }

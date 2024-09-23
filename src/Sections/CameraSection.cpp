@@ -1,6 +1,6 @@
 #include "Sections/CameraSection.hpp"
 #include "Sections/ParamSection.hpp"
-#include "utils.hpp"
+#include "list.hpp"
 
 CameraSection::CameraSection(Engine* engine)
     : SubSection("camera", "List, create, edit, delete cameras"), engine(engine)
@@ -25,13 +25,13 @@ CameraSection::CameraSection(Engine* engine)
                     PluginProvider& provider = this->engine->getPluginProvider();
                     std::vector<PluginDescriptor> plugins = provider.getPlugins(PluginType::CAMERA);
 
-                    if (std::string("help")._Starts_with(cmd))
+                    if (std::string("help").rfind(cmd, 0) == 0)
                         return std::string("help").substr(cmd.size());
 
                     for (PluginDescriptor plugin : plugins)
                     {
                         std::string name = plugin.getName();
-                        if (name._Starts_with(cmd))
+                        if (name.rfind(cmd, 0) == 0)
                             return name.substr(cmd.size());
                     }
                     return "";
