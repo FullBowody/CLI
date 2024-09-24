@@ -1,5 +1,7 @@
 #include "Keyboard.hpp"
-#include <unistd.h> // read()
+#ifndef _WIN32
+#include <unistd.h>
+#endif
     
 Keyboard::Keyboard()
 {
@@ -26,7 +28,7 @@ Keyboard::~Keyboard()
 int Keyboard::kbhit()
 {
 #ifdef _WIN32
-    return kbhit();
+    return _kbhit();
 #else
     unsigned char ch;
     int nread;
@@ -48,7 +50,7 @@ int Keyboard::kbhit()
 int Keyboard::getch()
 {
 #ifdef _WIN32
-    return getch();
+    return _getch();
 #else
     char ch;
 

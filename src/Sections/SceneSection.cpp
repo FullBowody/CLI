@@ -10,7 +10,7 @@ SceneSection::SceneSection(Engine* engine)
         { },
         [this](std::vector<Argument> args) -> bool {
             Scene& scene = this->engine->getScene();
-            const std::vector<Marker>& markers = scene.getMarkers();
+            const std::vector<Marker*>& markers = scene.getMarkers();
             listVector<Marker>("Scene markers", markers);
             return true;
         }
@@ -29,7 +29,7 @@ SceneSection::SceneSection(Engine* engine)
             Vec3f pos = args[1].asVec3f();
             Quaternion rot = Quaternion::FromEuler(args[2].asVec3f());
             Scene& scene = this->engine->getScene();
-            scene.addMarker(Marker(Pose(pos, rot), id));
+            scene.createMarker(id, Pose(pos, rot));
             return true;
         }
     ));
@@ -41,7 +41,7 @@ SceneSection::SceneSection(Engine* engine)
         [this](std::vector<Argument> args) -> bool {
             int id = args[0].asInt();
             Scene& scene = this->engine->getScene();
-            scene.removeMarker(id);
+            scene.destroyMarker(id);
             return true;
         }
     ));
